@@ -4,6 +4,7 @@ import { PairCreated } from '../types/Factory/Factory'
 import { Bundle, Pair, Token, UniswapFactory } from '../types/schema'
 import { Pair as PairTemplate } from '../types/templates'
 import {
+  BUNDLE_ID,
   FACTORY_ADDRESS,
   fetchTokenDecimals,
   fetchTokenName,
@@ -27,7 +28,7 @@ export function handleNewPair(event: PairCreated): void {
     factory.txCount = ZERO_BI
 
     // create new bundle
-    let bundle = new Bundle('1')
+    let bundle = new Bundle(BUNDLE_ID)
     bundle.ethPrice = ZERO_BD
     bundle.save()
   }
@@ -35,12 +36,12 @@ export function handleNewPair(event: PairCreated): void {
   factory.save()
 
   // create the tokens
-  let token0 = Token.load(event.params.token0.toHexString())
-  let token1 = Token.load(event.params.token1.toHexString())
+  let token0 = Token.load(event.params.token0)
+  let token1 = Token.load(event.params.token1)
 
   // fetch info if null
   if (token0 === null) {
-    token0 = new Token(event.params.token0.toHexString())
+    token0 = new Token(event.params.token0)
     token0.symbol = fetchTokenSymbol(event.params.token0)
     token0.name = fetchTokenName(event.params.token0)
     token0.totalSupply = fetchTokenTotalSupply(event.params.token0)
@@ -64,7 +65,7 @@ export function handleNewPair(event: PairCreated): void {
 
   // fetch info if null
   if (token1 === null) {
-    token1 = new Token(event.params.token1.toHexString())
+    token1 = new Token(event.params.token1)
     token1.symbol = fetchTokenSymbol(event.params.token1)
     token1.name = fetchTokenName(event.params.token1)
     token1.totalSupply = fetchTokenTotalSupply(event.params.token1)
@@ -84,7 +85,7 @@ export function handleNewPair(event: PairCreated): void {
     token1.txCount = ZERO_BI
   }
 
-  let pair = new Pair(event.params.pair.toHexString()) as Pair
+  let pair = new Pair(event.params.pair) as Pair
   pair.token0 = token0.id
   pair.token1 = token1.id
   pair.liquidityProviderCount = ZERO_BI
