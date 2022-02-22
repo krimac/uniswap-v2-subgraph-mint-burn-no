@@ -12,9 +12,14 @@ import {
   ZERO_BD,
   ZERO_BI,
 } from './helpers'
+import { TokenDefinition } from './tokenDefinition'
 
 export function handleNewPair(event: PairCreated): void {
   // load factory (create if first exchange)
+  log.info('early defs', [])
+  let defs = TokenDefinition.getStaticDefinitions()
+  log.info('got early defs', [])
+
   let factory = UniswapFactory.load(FACTORY_ADDRESS)
   if (factory === null) {
     factory = new UniswapFactory(FACTORY_ADDRESS)
