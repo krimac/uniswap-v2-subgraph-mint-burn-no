@@ -97,7 +97,7 @@ type Pair @entity {
   swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
-type User @entity {
+type User @entity(immutable: true) {
   id: Bytes!
   liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
   usdSwapped: BigDecimal!
@@ -127,7 +127,7 @@ type LiquidityPositionSnapshot @entity {
   liquidityTokenBalance: BigDecimal! # snapshot of users pool token balance
 }
 
-type Transaction @entity {
+type Transaction @entity(immutable: true) {
   id: Bytes! # txn hash
   blockNumber: BigInt!
   timestamp: BigInt!
@@ -138,7 +138,7 @@ type Transaction @entity {
   swaps: [Swap!]!
 }
 
-type Mint @entity {
+type Mint @entity(immutable: true) {
   # transaction hash + "-" + index in mints Transaction array
   id: Bytes!
   transaction: Transaction!
@@ -162,7 +162,7 @@ type Mint @entity {
   feeLiquidity: BigDecimal
 }
 
-type Burn @entity {
+type Burn @entity(immutable: true) {
   # transaction hash + "-" + index in mints Transaction array
   id: Bytes!
   transaction: Transaction!
@@ -189,7 +189,7 @@ type Burn @entity {
   feeLiquidity: BigDecimal
 }
 
-type Swap @entity {
+type Swap @entity(immutable: true) {
   # transaction hash + "-" + index in swaps Transaction array
   id: Bytes!
   transaction: Transaction!
