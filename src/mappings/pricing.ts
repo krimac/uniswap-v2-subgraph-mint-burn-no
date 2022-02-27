@@ -85,14 +85,17 @@ export function findEthPerToken(token: Token): BigDecimal {
   for (let i = 0; i < WHITELIST.length; ++i) {
     let pairAddress = factoryContract.getPair(tokenAddr, WHITELIST_ADDR[i])
     if (pairAddress != ADDRESS_ZERO) {
-      let pair = Pair.load(pairAddress)!
-      if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token1 = Token.load(pair.token1)!
-        return ethAmount(pair.token1Price, token1) // return token1 per our token * Eth per token 1
-      }
-      if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token0 = Token.load(pair.token0)!
-        return ethAmount(pair.token0Price, token0) // return token0 per our token * ETH per token 0
+      let pair = Pair.load(pairAddress)
+      // If we don't know this pair, don't fail the subgraph
+      if (pair) {
+        if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+          let token1 = Token.load(pair.token1)!
+          return ethAmount(pair.token1Price, token1) // return token1 per our token * Eth per token 1
+        }
+        if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+          let token0 = Token.load(pair.token0)!
+          return ethAmount(pair.token0Price, token0) // return token0 per our token * ETH per token 0
+        }
       }
     }
   }
