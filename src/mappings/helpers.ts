@@ -223,18 +223,26 @@ export function ethAmount(amount: BigDecimal, token: Token): BigDecimal {
   }
 }
 
-/// Return `true` if id0 < id1
-function bytesLessThan(id0: Bytes, id1: Bytes): boolean {
+/// Return -1 if id0 < id1, 0 if they are equal and 1 if id0 > id1
+function compare(id0: Bytes, id1: Bytes): i32 {
   for (let i = 0; i < id0.length && i < id1.length; i++) {
     if (id0[i] < id1[i]) {
-      return true;
+      return -1;
+    } else if (id0[i] > id1[i]) {
+      return 1;
     }
   }
-  return (id0.length < id1.length)
+  if (id0.length < id1.length) {
+    return -1;
+  } else if (id0.length > id1.length) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 export function pairLookupID(id0: Bytes, id1: Bytes): Bytes {
-  if (bytesLessThan(id0, id1)) {
+  if (compare(id0, id1) < 0) {
     return id0.concat(id1)
   } else {
     return id1.concat(id0)
