@@ -3,13 +3,13 @@ import { Pair, Token, Bundle, PairLookup } from '../types/schema'
 import { BigDecimal, Address, BigInt, Bytes } from '@graphprotocol/graph-ts/index'
 import {
   ZERO_BD,
-  factoryContract,
   ADDRESS_ZERO,
   ONE_BD,
   UNTRACKED_PAIRS,
   loadBundle,
   usdPrice,
-  ethAmount
+  ethAmount,
+  pairLookupID
 } from './helpers'
 
 const WETH_ADDRESS = Bytes.fromHexString('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
@@ -92,12 +92,7 @@ export function findEthPerToken(token: Token): BigDecimal {
   let tokenAddr = Address.fromBytes(token.id)
   // loop through whitelist and check if paired with any
   for (let i = 0; i < WHITELIST.length; ++i) {
-    let pairLookup = PairLookup.load(
-      token.id
-        .toHexString()
-        .concat('-')
-        .concat(WHITELIST[i].toHexString())
-    )
+    let pairLookup = PairLookup.load(pairLookupID(token.id, WHITELIST_ADDR[i]))
     if (pairLookup !== null && pairLookup.pairAddress != ADDRESS_ZERO) {
       let pair = Pair.load(pairLookup.pairAddress)
       // If we don't know this pair, don't fail the subgraph

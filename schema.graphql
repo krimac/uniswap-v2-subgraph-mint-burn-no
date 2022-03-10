@@ -301,6 +301,6 @@ type TokenDayData @entity {
 }
 
 type PairLookup @entity {
-  id: ID!
+  id: Bytes!
   pairAddress: Pair!
 }

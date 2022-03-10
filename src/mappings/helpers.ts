@@ -222,3 +222,21 @@ export function ethAmount(amount: BigDecimal, token: Token): BigDecimal {
     return derivedETH.times(amount)
   }
 }
+
+/// Return `true` if id0 < id1
+function bytesLessThan(id0: Bytes, id1: Bytes): boolean {
+  for (let i = 0; i < id0.length && i < id1.length; i++) {
+    if (id0[i] < id1[i]) {
+      return true;
+    }
+  }
+  return (id0.length < id1.length)
+}
+
+export function pairLookupID(id0: Bytes, id1: Bytes): Bytes {
+  if (bytesLessThan(id0, id1)) {
+    return id0.concat(id1)
+  } else {
+    return id1.concat(id0)
+  }
+}
