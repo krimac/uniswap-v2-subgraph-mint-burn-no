@@ -1,0 +1,1 @@
+- if started at later block the handler will catch pairs created before the block and through exception. need to write excepcion handling code to prevent the subgraph from failing 
